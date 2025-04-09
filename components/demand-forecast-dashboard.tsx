@@ -5,27 +5,35 @@ import { motion } from "framer-motion"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import * as z from "zod"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "@/components/ui/tabs"
 import { ForecastForm } from "@/components/forecast-form"
 import { ForecastResults } from "@/components/forecast-results"
 import { ThemeToggle } from "@/components/theme-toggle"
+import axios from "axios"
 
-// Define the form schema with Zod
+// Define Zod schema
 export const forecastFormSchema = z.object({
   date: z.date(),
-  storeId: z.string(),
-  productId: z.string(),
   category: z.string(),
   region: z.string(),
   inventoryLevel: z.number().min(0),
   unitsSold: z.number().min(0),
-  unitsOrdered: z.number().min(0),
   price: z.number().min(0),
   discount: z.number().min(0).max(100),
   weatherCondition: z.string(),
   isHoliday: z.boolean(),
-  competitorPricing: z.number().min(0),
   seasonality: z.string(),
 })
 
@@ -39,44 +47,40 @@ export function DemandForecastDashboard() {
     resolver: zodResolver(forecastFormSchema),
     defaultValues: {
       date: new Date(),
-      storeId: "",
-      productId: "",
       category: "",
       region: "",
       inventoryLevel: 0,
       unitsSold: 0,
-      unitsOrdered: 0,
       price: 0,
       discount: 0,
       weatherCondition: "",
       isHoliday: false,
-      competitorPricing: 0,
       seasonality: "",
     },
   })
 
-  async function onSubmit(data: ForecastFormValues) {
+  const onSubmit = async (data: ForecastFormValues) => {
     setIsLoading(true)
+    try {
+      const response = await axios.post("http://127.0.0.1:8000/predict", {
+        product_category: data.category,
+        shelf_location: data.region,
+        // date: data.date.toISOString().split("T")[0],
+        stock_level: data.inventoryLevel,
+        units_sold: data.unitsSold,
+        price: data.price,
+        discount: data.discount,
+        weather: data.weatherCondition,
+        is_holiday: data.isHoliday,
+        seasonality: data.seasonality,
+      })
 
-    // Simulate API call with a timeout
-    setTimeout(() => {
-      // Mock forecast data
-      const mockForecast = {
-        predictedDemand: Math.floor(Math.random() * 1000) + 100,
-        confidence: Math.floor(Math.random() * 30) + 70,
-        historicalData: Array.from({ length: 12 }, (_, i) => ({
-          month: i + 1,
-          demand: Math.floor(Math.random() * 1000) + 100,
-        })),
-        forecastData: Array.from({ length: 6 }, (_, i) => ({
-          month: i + 13,
-          demand: Math.floor(Math.random() * 1000) + 100,
-        })),
-      }
-
-      setForecastData(mockForecast)
+      setForecastData(response.data)
+    } catch (error) {
+      console.error("Prediction error:", error)
+    } finally {
       setIsLoading(false)
-    }, 1500)
+    }
   }
 
   return (
@@ -89,13 +93,15 @@ export function DemandForecastDashboard() {
       <Tabs defaultValue="input" className="w-full">
         <TabsList className="grid w-full grid-cols-2 mb-6">
           <TabsTrigger value="input">Input Parameters</TabsTrigger>
-          <TabsTrigger value="results" disabled={!forecastData}>
-            Results
-          </TabsTrigger>
+          <TabsTrigger value="results" disabled={!forecastData}>Results</TabsTrigger>
         </TabsList>
 
         <TabsContent value="input">
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+          >
             <Card>
               <CardHeader>
                 <CardTitle>Forecast Parameters</CardTitle>
@@ -110,7 +116,11 @@ export function DemandForecastDashboard() {
 
         <TabsContent value="results">
           {forecastData && (
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+            >
               <ForecastResults data={forecastData} />
             </motion.div>
           )}
@@ -119,4 +129,3 @@ export function DemandForecastDashboard() {
     </div>
   )
 }
-
