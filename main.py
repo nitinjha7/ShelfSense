@@ -4,6 +4,7 @@ from pydantic import BaseModel
 import numpy as np
 import joblib  # or import pickle
 import pandas as pd
+from sklearn.preprocessing import StandardScaler
 
 app = FastAPI()
 
@@ -48,6 +49,9 @@ def predict(req: PredictRequest):
     }])
 
     # Note: Make sure input_df is preprocessed (encoding, scaling, etc.) as expected by your model
+    #transforming the input data
+    scaler=StandardScaler()
+    input_df = scaler.fit_transform(input_df)
 
     # Predict
     predicted_demand = model.predict(input_df)[0]
