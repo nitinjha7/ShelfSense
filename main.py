@@ -55,15 +55,7 @@ def predict(req: PredictRequest):
 
     # Predict
     predicted_demand = model.predict(input_df)[0]
-    confidence = 92.5  # You can generate this from model if available
-
-    # Dummy data for charts
-    historical = [{"month": i, "demand": int(predicted_demand - 20 + i * 5)} for i in range(1, 4)]
-    forecast = [{"month": i, "demand": int(predicted_demand + i * 3)} for i in range(4, 7)]
 
     return {
-        "predictedDemand": int(predicted_demand),
-        "confidence": confidence,
-        "historicalData": historical,
-        "forecastData": forecast
+        "predictedDemandForecast": int(predicted_demand)
     }
