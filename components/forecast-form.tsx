@@ -93,57 +93,6 @@ export function ForecastForm({ form, onSubmit, isLoading }: ForecastFormProps) {
             )}
           />
 
-          {/* Store ID */}
-          <FormField
-            control={form.control}
-            name="storeId"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Store ID</FormLabel>
-                <Select onValueChange={field.onChange} defaultValue={field.value}>
-                  <FormControl>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select store" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    {storeOptions.map((option) => (
-                      <SelectItem key={option.value} value={option.value}>
-                        {option.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          {/* Product ID */}
-          <FormField
-            control={form.control}
-            name="productId"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Product ID</FormLabel>
-                <Select onValueChange={field.onChange} defaultValue={field.value}>
-                  <FormControl>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select product" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    {productOptions.map((option) => (
-                      <SelectItem key={option.value} value={option.value}>
-                        {option.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
 
           {/* Category */}
           <FormField
@@ -219,21 +168,6 @@ export function ForecastForm({ form, onSubmit, isLoading }: ForecastFormProps) {
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Units Sold</FormLabel>
-                <FormControl>
-                  <Input type="number" min="0" {...field} onChange={(e) => field.onChange(Number(e.target.value))} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          {/* Units Ordered */}
-          <FormField
-            control={form.control}
-            name="unitsOrdered"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Units Ordered</FormLabel>
                 <FormControl>
                   <Input type="number" min="0" {...field} onChange={(e) => field.onChange(Number(e.target.value))} />
                 </FormControl>
@@ -323,27 +257,6 @@ export function ForecastForm({ form, onSubmit, isLoading }: ForecastFormProps) {
                   <FormLabel>Holiday</FormLabel>
                   <FormDescription>Check if this is a holiday period</FormDescription>
                 </div>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          {/* Competitor Pricing */}
-          <FormField
-            control={form.control}
-            name="competitorPricing"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Competitor Pricing</FormLabel>
-                <FormControl>
-                  <Input
-                    type="number"
-                    min="0"
-                    step="0.01"
-                    {...field}
-                    onChange={(e) => field.onChange(Number(e.target.value))}
-                  />
-                </FormControl>
                 <FormMessage />
               </FormItem>
             )}
