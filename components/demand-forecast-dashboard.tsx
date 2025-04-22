@@ -26,15 +26,15 @@ import axios from "axios"
 // Define Zod schema
 export const forecastFormSchema = z.object({
   date: z.date(),
-  category: z.string(),
-  region: z.string(),
+  category: z.number().min(0).max(100),
+  region: z.number().min(0).max(100),
   inventoryLevel: z.number().min(0),
   unitsSold: z.number().min(0),
   price: z.number().min(0),
   discount: z.number().min(0).max(100),
-  weatherCondition: z.string(),
+  weatherCondition: z.number().min(0).max(100),
   isHoliday: z.boolean(),
-  seasonality: z.string(),
+  seasonality: z.number().min(0).max(100),
 })
 
 export type ForecastFormValues = z.infer<typeof forecastFormSchema>
@@ -47,15 +47,15 @@ export function DemandForecastDashboard() {
     resolver: zodResolver(forecastFormSchema),
     defaultValues: {
       date: new Date(),
-      category: "",
-      region: "",
+      category: 0,
+      region: 0,
       inventoryLevel: 0,
       unitsSold: 0,
       price: 0,
       discount: 0,
-      weatherCondition: "",
+      weatherCondition: 0,
       isHoliday: false,
-      seasonality: "",
+      seasonality: 0,
     },
   })
 
