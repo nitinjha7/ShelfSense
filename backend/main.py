@@ -17,27 +17,27 @@ app.add_middleware(
 )
 
 # Load trained ML model from .pkl
-model = joblib.load("model.pkl")  # Update path if needed
+model_bundle = joblib.load("shelfSense.pkl")
+model = model_bundle["model"]
+scaler = model_bundle["scaler"]
 
 # Input model
 class PredictRequest(BaseModel):
-    date: str
-    category: str
-    region: str
-    inventoryLevel: float
-    unitsSold: float
-    price: float
-    discount: float
-    weatherCondition: str
+    category: int
+    region: int
+    inventoryLevel: int
+    unitsSold: int
+    price: int
+    discount: int
+    weatherCondition: int
     isHoliday: bool
-    seasonality: str
+    seasonality: int
 
 @app.post("/predict")
 def predict(req: PredictRequest):
     try:
         # Prepare input data for model
         input_df = pd.DataFrame([{
-            "date": req.date,
             "category": req.category,
             "region": req.region,
             "inventoryLevel": req.inventoryLevel,
@@ -45,13 +45,13 @@ def predict(req: PredictRequest):
             "price": req.price,
             "discount": req.discount,
             "weatherCondition": req.weatherCondition,
-            "isHoliday": int(req.isHoliday),
+            "isHoliday": 1 if req.isHoliday else 0,
             "seasonality": req.seasonality
         }])
 
         # Note: Make sure input_df is preprocessed (encoding, scaling, etc.) as expected by your model
-        scaler = StandardScaler()
-        input_df = scaler.fit_transform(input_df)
+        # scaler = StandardScaler()
+        input_df = scaler.transform(input_df)
 
         # Predict
         predicted_demand = model.predict(input_df)[0]
@@ -67,3 +67,6 @@ def predict(req: PredictRequest):
             "error": "An error occurred during prediction. Please check your input data and try again."
         }
 
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=5000)

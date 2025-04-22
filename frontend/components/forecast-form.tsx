@@ -21,44 +21,34 @@ interface ForecastFormProps {
 
 export function ForecastForm({ form, onSubmit, isLoading }: ForecastFormProps) {
   // Mock data for dropdowns
-  const storeOptions = [
-    { value: "store-001", label: "Store 001" },
-    { value: "store-002", label: "Store 002" },
-    { value: "store-003", label: "Store 003" },
-  ]
-
-  const productOptions = [
-    { value: "prod-001", label: "Product 001" },
-    { value: "prod-002", label: "Product 002" },
-    { value: "prod-003", label: "Product 003" },
-  ]
 
   const categoryOptions = [
-    { value: "electronics", label: "Electronics" },
-    { value: "clothing", label: "Clothing" },
-    { value: "groceries", label: "Groceries" },
-    { value: "home", label: "Home & Garden" },
+    { value: 1, label: "Electronics" },
+    { value: 4, label: "Toys" },
+    { value: 3, label: "Groceries" },
+    { value: 0, label: "Clothing" },
+    { value: 2, label: "Furniture" }
   ]
 
   const regionOptions = [
-    { value: "north", label: "North" },
-    { value: "south", label: "South" },
-    { value: "east", label: "East" },
-    { value: "west", label: "West" },
+    { value: 1, label: "North" },
+    { value: 2, label: "South" },
+    { value: 0, label: "East" },
+    { value: 3, label: "West" },
   ]
 
   const weatherOptions = [
-    { value: "sunny", label: "Sunny" },
-    { value: "rainy", label: "Rainy" },
-    { value: "cloudy", label: "Cloudy" },
-    { value: "snowy", label: "Snowy" },
+    { value: 3, label: "Sunny" },
+    { value: 1, label: "Rainy" },
+    { value: 0, label: "Cloudy" },
+    { value: 2, label: "Snowy" },
   ]
 
   const seasonOptions = [
-    { value: "spring", label: "Spring" },
-    { value: "summer", label: "Summer" },
-    { value: "autumn", label: "Autumn" },
-    { value: "winter", label: "Winter" },
+    { value: 1, label: "Spring" },
+    { value: 2, label: "Summer" },
+    { value: 0, label: "Autumn" },
+    { value: 3, label: "Winter" },
   ]
 
   return (
@@ -101,7 +91,9 @@ export function ForecastForm({ form, onSubmit, isLoading }: ForecastFormProps) {
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Category</FormLabel>
-                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <Select onValueChange={(value) => field.onChange(Number(value))}
+                  defaultValue={field.value?.toString()}
+                >
                   <FormControl>
                     <SelectTrigger>
                       <SelectValue placeholder="Select category" />
@@ -109,7 +101,7 @@ export function ForecastForm({ form, onSubmit, isLoading }: ForecastFormProps) {
                   </FormControl>
                   <SelectContent>
                     {categoryOptions.map((option) => (
-                      <SelectItem key={option.value} value={option.value}>
+                      <SelectItem key={option.value} value={option.value.toString()}>
                         {option.label}
                       </SelectItem>
                     ))}
@@ -127,7 +119,9 @@ export function ForecastForm({ form, onSubmit, isLoading }: ForecastFormProps) {
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Region</FormLabel>
-                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <Select onValueChange={(value) => field.onChange(Number(value))}
+                  defaultValue={field.value?.toString()}
+                >
                   <FormControl>
                     <SelectTrigger>
                       <SelectValue placeholder="Select region" />
@@ -135,7 +129,7 @@ export function ForecastForm({ form, onSubmit, isLoading }: ForecastFormProps) {
                   </FormControl>
                   <SelectContent>
                     {regionOptions.map((option) => (
-                      <SelectItem key={option.value} value={option.value}>
+                      <SelectItem key={option.value} value={option.value.toString()}>
                         {option.label}
                       </SelectItem>
                     ))}
@@ -225,7 +219,9 @@ export function ForecastForm({ form, onSubmit, isLoading }: ForecastFormProps) {
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Weather Condition</FormLabel>
-                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <Select onValueChange={(value) => field.onChange(Number(value))}
+                  defaultValue={field.value?.toString()}
+                >
                   <FormControl>
                     <SelectTrigger>
                       <SelectValue placeholder="Select weather" />
@@ -233,7 +229,7 @@ export function ForecastForm({ form, onSubmit, isLoading }: ForecastFormProps) {
                   </FormControl>
                   <SelectContent>
                     {weatherOptions.map((option) => (
-                      <SelectItem key={option.value} value={option.value}>
+                      <SelectItem key={option.value} value={option.value.toString()}>
                         {option.label}
                       </SelectItem>
                     ))}
@@ -269,7 +265,9 @@ export function ForecastForm({ form, onSubmit, isLoading }: ForecastFormProps) {
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Seasonality</FormLabel>
-                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <Select onValueChange={(value) => field.onChange(Number(value))}
+                  defaultValue={field.value?.toString()}
+                >
                   <FormControl>
                     <SelectTrigger>
                       <SelectValue placeholder="Select season" />
@@ -277,7 +275,7 @@ export function ForecastForm({ form, onSubmit, isLoading }: ForecastFormProps) {
                   </FormControl>
                   <SelectContent>
                     {seasonOptions.map((option) => (
-                      <SelectItem key={option.value} value={option.value}>
+                      <SelectItem key={option.value} value={option.value.toString()}>
                         {option.label}
                       </SelectItem>
                     ))}

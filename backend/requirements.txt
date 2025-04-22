@@ -1,0 +1,9 @@
+Flask
+Flask-Cors
+numpy
+scikit-learn
+influxdb-client
+resend
+requests
+pandas
+python-dotenv
