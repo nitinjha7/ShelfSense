@@ -4,6 +4,7 @@ from pydantic import BaseModel
 import numpy as np
 import joblib  # or import pickle
 import pandas as pd
+from sklearn.preprocessing import StandardScaler
 
 app = FastAPI()
 
@@ -33,33 +34,36 @@ class PredictRequest(BaseModel):
 
 @app.post("/predict")
 def predict(req: PredictRequest):
-    # Prepare input data for model
-    input_df = pd.DataFrame([{
-        "date": req.date,
-        "category": req.category,
-        "region": req.region,
-        "inventoryLevel": req.inventoryLevel,
-        "unitsSold": req.unitsSold,
-        "price": req.price,
-        "discount": req.discount,
-        "weatherCondition": req.weatherCondition,
-        "isHoliday": int(req.isHoliday),
-        "seasonality": req.seasonality
-    }])
+    try:
+        # Prepare input data for model
+        input_df = pd.DataFrame([{
+            "date": req.date,
+            "category": req.category,
+            "region": req.region,
+            "inventoryLevel": req.inventoryLevel,
+            "unitsSold": req.unitsSold,
+            "price": req.price,
+            "discount": req.discount,
+            "weatherCondition": req.weatherCondition,
+            "isHoliday": int(req.isHoliday),
+            "seasonality": req.seasonality
+        }])
 
-    # Note: Make sure input_df is preprocessed (encoding, scaling, etc.) as expected by your model
+        # Note: Make sure input_df is preprocessed (encoding, scaling, etc.) as expected by your model
+        scaler = StandardScaler()
+        input_df = scaler.fit_transform(input_df)
 
-    # Predict
-    predicted_demand = model.predict(input_df)[0]
-    confidence = 92.5  # You can generate this from model if available
+        # Predict
+        predicted_demand = model.predict(input_df)[0]
 
-    # Dummy data for charts
-    historical = [{"month": i, "demand": int(predicted_demand - 20 + i * 5)} for i in range(1, 4)]
-    forecast = [{"month": i, "demand": int(predicted_demand + i * 3)} for i in range(4, 7)]
+        return {
+            "predictedDemandForecast": int(predicted_demand)
+        }
 
-    return {
-        "predictedDemand": int(predicted_demand),
-        "confidence": confidence,
-        "historicalData": historical,
-        "forecastData": forecast
-    }
+    except Exception as e:
+        # Optional: log the error
+        print(f"Prediction error: {e}")
+        return {
+            "error": "An error occurred during prediction. Please check your input data and try again."
+        }
+
