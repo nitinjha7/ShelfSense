@@ -62,20 +62,21 @@ export function DemandForecastDashboard() {
   const onSubmit = async (data: ForecastFormValues) => {
     setIsLoading(true)
     try {
-      const response = await axios.post("http://127.0.0.1:8000/predict", {
-        product_category: data.category,
-        shelf_location: data.region,
-        // date: data.date.toISOString().split("T")[0],
-        stock_level: data.inventoryLevel,
-        units_sold: data.unitsSold,
+      const response = await axios.post("http://localhost:5000/predict", {
+        category: data.category,
+        region: data.region,
+        inventoryLevel: data.inventoryLevel,
+        unitsSold: data.unitsSold,
         price: data.price,
         discount: data.discount,
-        weather: data.weatherCondition,
-        is_holiday: data.isHoliday,
+        weatherCondition: data.weatherCondition,
+        isHoliday: data.isHoliday,
         seasonality: data.seasonality,
       })
+      
 
       setForecastData(response.data)
+      console.log("Forecast data:", response.data)
     } catch (error) {
       console.error("Prediction error:", error)
     } finally {
